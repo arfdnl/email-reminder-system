@@ -4,17 +4,19 @@ import pandas as pd
 def normalize_date(value):
     if pd.isna(value):
         return None
-    try:
-        dt = pd.to_datetime(value, errors="coerce")
-        if pd.isna(dt):
-            return None
-        return dt.to_pydatetime().date()
-    except Exception:
+    dt = pd.to_datetime(value, errors="coerce")
+    if pd.isna(dt):
         return None
+    return dt.to_pydatetime().date()
 
-def filter_expiring(df: pd.DataFrame, remind_days: int):
+def filter_expiring(df: pd.DataFrame, max_window_days: int):
+    """
+    Returns:
+      records: list of (idx, row, exp_date, days_left)
+      skipped: list of (idx, reason)
+    """
     today = datetime.now().date()
-    end = today + timedelta(days=remind_days)
+    end = today + timedelta(days=max_window_days)
 
     records = []
     skipped = []
@@ -31,7 +33,8 @@ def filter_expiring(df: pd.DataFrame, remind_days: int):
             continue
 
         if today <= exp <= end:
-            records.append((i, row, exp))
+            days_left = (exp - today).days
+            records.append((i, row, exp, days_left))
         else:
             skipped.append((i, "not_in_window"))
 

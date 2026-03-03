@@ -3,12 +3,14 @@ import logging
 from datetime import datetime
 
 from config import (
-    REMIND_DAYS, TEST_MODE,
+    REMIND_SCHEDULE_DAYS, MAX_WINDOW_DAYS,
+    TEST_MODE,
     SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS,
     FROM_EMAIL, TEST_TO_EMAIL,
     DATA_FILE, LOG_DIR, REPORT_DIR,
     RETRY_MAX, RETRY_BACKOFF_SECONDS,
     SENT_LOG_FILE,
+    MAX_EMAILS_PER_RUN,
 )
 from loader import load_clients
 from filterer import filter_expiring
@@ -31,8 +33,8 @@ def setup_logging() -> str:
     return log_path
 
 
-def make_text_body(row, exp_date) -> str:
-    return f"""Reminder: Client Renewal Expiring Soon
+def make_text_body(row, exp_date, stage_days: int) -> str:
+    return f"""Reminder: Client Renewal Expiring Soon (D-{stage_days})
 
 INDIVIDUAL/COMPANY: {row['INDIVIDUAL/COMPANY']}
 OFFICER NAME/NAME: {row['OFFICER NAME/NAME']}
@@ -46,7 +48,7 @@ Generated at: {datetime.now()}
 """
 
 
-def make_html_body(row, exp_date) -> str:
+def make_html_body(row, exp_date, stage_days: int) -> str:
     def esc(x):
         s = "" if x is None else str(x)
         return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -60,11 +62,11 @@ def make_html_body(row, exp_date) -> str:
       <div style="background:#ffffff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);overflow:hidden;">
 
         <div style="padding:20px;text-align:center;">
-          <img src="{https://www.kyrolsecuritylabs.com/images/logo%20(2).png}" alt="Kyrol Security Labs" style="max-width:220px;height:auto;" />
+          <img src="{logo_url}" alt="Kyrol Security Labs" style="max-width:220px;height:auto;" />
         </div>
 
         <div style="padding:18px 24px;background:#0b5fff;color:#fff;">
-          <h2 style="margin:0;">Renewal Reminder</h2>
+          <h2 style="margin:0;">Renewal Reminder (D-{stage_days})</h2>
           <p style="margin:6px 0 0 0;">Expiry Date: <strong>{esc(exp_date)}</strong></p>
         </div>
 
@@ -107,44 +109,52 @@ def validate_env():
         raise ValueError("TEST_MODE is true but TEST_TO_EMAIL is empty.")
 
     if not SMTP_HOST or not SMTP_USER or not SMTP_PASS:
-        raise ValueError("SMTP settings missing. Set SMTP_HOST, SMTP_USER, SMTP_PASS (and port).")
+        raise ValueError("SMTP settings missing. Set SMTP_HOST, SMTP_USER, SMTP_PASS.")
 
 
 def main():
     log_path = setup_logging()
     logging.info("Starting email reminder job...")
-    logging.info(f"DATA_FILE={DATA_FILE} REMIND_DAYS={REMIND_DAYS} TEST_MODE={TEST_MODE}")
-    logging.info(f"RETRY_MAX={RETRY_MAX} RETRY_BACKOFF_SECONDS={RETRY_BACKOFF_SECONDS}")
+    logging.info(f"DATA_FILE={DATA_FILE} TEST_MODE={TEST_MODE}")
+    logging.info(f"REMIND_SCHEDULE_DAYS={REMIND_SCHEDULE_DAYS} MAX_WINDOW_DAYS={MAX_WINDOW_DAYS}")
+    logging.info(f"MAX_EMAILS_PER_RUN={MAX_EMAILS_PER_RUN}")
     logging.info(f"SENT_LOG_FILE={SENT_LOG_FILE}")
 
     validate_env()
 
-    # Load input data
     df = load_clients(DATA_FILE)
-    expiring, skipped = filter_expiring(df, REMIND_DAYS)
+    candidates, skipped = filter_expiring(df, MAX_WINDOW_DAYS)
 
-    # Load "already sent" state so we don't spam daily
     sent_log = load_sent_log(SENT_LOG_FILE)
 
     emailed = 0
     failed = 0
     already_sent = 0
+    not_stage = 0
 
-    for idx, row, exp_date in expiring:
-        # Determine who to email
+    for idx, row, exp_date, days_left in candidates:
+        # Only send on exact schedule days (30, 7, 1)
+        if days_left not in REMIND_SCHEDULE_DAYS:
+            not_stage += 1
+            continue
+
+        if emailed >= MAX_EMAILS_PER_RUN:
+            logging.warning(f"Reached MAX_EMAILS_PER_RUN={MAX_EMAILS_PER_RUN}. Stopping sends.")
+            break
+
         real_email = str(row["EMAIL"]).strip()
         to_email = TEST_TO_EMAIL if TEST_MODE else real_email
 
-        # Unique key per email+expiry date (so same item won't be sent again)
-        key = make_key(real_email, exp_date)
+        stage_days = days_left
+        key = make_key(real_email, exp_date, stage_days)
         if was_sent(sent_log, key):
             already_sent += 1
             logging.info(f"Skipping row={idx} (already sent) key={key}")
             continue
 
-        subject = f"Renewal Reminder: Expires {exp_date}"
-        text_body = make_text_body(row, exp_date)
-        html_body = make_html_body(row, exp_date)
+        subject = f"Renewal Reminder (D-{stage_days}): expires {exp_date}"
+        text_body = make_text_body(row, exp_date, stage_days)
+        html_body = make_html_body(row, exp_date, stage_days)
 
         try:
             send_email(
@@ -156,9 +166,8 @@ def main():
                 retry_backoff_seconds=RETRY_BACKOFF_SECONDS,
             )
             emailed += 1
-            logging.info(f"Emailed row={idx} to={to_email} exp={exp_date}")
+            logging.info(f"Emailed row={idx} to={to_email} exp={exp_date} days_left={days_left}")
 
-            # Mark + save immediately (so if script crashes later, state is still updated)
             mark_sent(sent_log, key)
             save_sent_log(SENT_LOG_FILE, sent_log)
 
@@ -169,7 +178,8 @@ def main():
     summary = (
         f"Run summary:\n"
         f"- Total rows: {len(df)}\n"
-        f"- Expiring within {REMIND_DAYS} days: {len(expiring)}\n"
+        f"- Candidates in window (<= {MAX_WINDOW_DAYS} days): {len(candidates)}\n"
+        f"- On schedule (days_left in {REMIND_SCHEDULE_DAYS}): {len(candidates) - not_stage}\n"
         f"- Emailed: {emailed}\n"
         f"- Already sent (skipped): {already_sent}\n"
         f"- Failed: {failed}\n"

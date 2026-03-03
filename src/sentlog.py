@@ -15,12 +15,10 @@ def load_sent_log(path: str) -> dict:
             data = json.load(f)
         return data if isinstance(data, dict) else {}
     except Exception:
-        # If file is corrupted, start fresh (safer than crashing)
         return {}
 
-def make_key(email: str, exp_date) -> str:
-    # exp_date may be a date object -> cast to string
-    return f"{email.strip().lower()}|{str(exp_date)}"
+def make_key(email: str, exp_date, stage_days: int) -> str:
+    return f"{email.strip().lower()}|{str(exp_date)}|D-{stage_days}"
 
 def was_sent(sent_log: dict, key: str) -> bool:
     return key in sent_log

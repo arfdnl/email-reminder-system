@@ -3,7 +3,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-REMIND_DAYS = int(os.getenv("REMIND_DAYS", "30"))
+# Schedule: send only on these day offsets before expiry
+# Example: "30,7,1"
+REMIND_SCHEDULE_DAYS = [
+    int(x.strip())
+    for x in os.getenv("REMIND_SCHEDULE_DAYS", "30,7,1").split(",")
+    if x.strip()
+]
+REMIND_SCHEDULE_DAYS = sorted(set(REMIND_SCHEDULE_DAYS), reverse=True)
+MAX_WINDOW_DAYS = max(REMIND_SCHEDULE_DAYS) if REMIND_SCHEDULE_DAYS else 30
+
 TEST_MODE = os.getenv("TEST_MODE", "true").lower() == "true"
 
 SMTP_HOST = os.getenv("SMTP_HOST", "")
@@ -20,4 +29,7 @@ REPORT_DIR = os.getenv("REPORT_DIR", "reports")
 
 RETRY_MAX = int(os.getenv("RETRY_MAX", "3"))
 RETRY_BACKOFF_SECONDS = int(os.getenv("RETRY_BACKOFF_SECONDS", "2"))
+
 SENT_LOG_FILE = os.getenv("SENT_LOG_FILE", "state/sent_log.json")
+
+MAX_EMAILS_PER_RUN = int(os.getenv("MAX_EMAILS_PER_RUN", "30"))
