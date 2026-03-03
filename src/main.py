@@ -47,34 +47,56 @@ Generated at: {datetime.now()}
 
 
 def make_html_body(row, exp_date) -> str:
-    # Minimal escaping so user data doesn't break HTML
     def esc(x):
         s = "" if x is None else str(x)
-        return (
-            s.replace("&", "&amp;")
-             .replace("<", "&lt;")
-             .replace(">", "&gt;")
-        )
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    logo_url = "https://www.kyrolsecuritylabs.com/images/logo%20(2).png"
 
     return f"""
 <html>
-  <body style="font-family: Arial, sans-serif; line-height: 1.4;">
-    <h2 style="margin: 0 0 12px 0;">Renewal Reminder</h2>
-    <p>Your client/service is expiring soon. Details below:</p>
+  <body style="margin:0;padding:0;background:#f4f6fb;font-family:Arial, sans-serif;">
+    <div style="max-width:680px;margin:0 auto;padding:24px;">
+      <div style="background:#ffffff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);overflow:hidden;">
 
-    <table cellpadding="8" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd;">
-      <tr><td style="border:1px solid #ddd;"><b>INDIVIDUAL/COMPANY</b></td><td style="border:1px solid #ddd;">{esc(row.get('INDIVIDUAL/COMPANY'))}</td></tr>
-      <tr><td style="border:1px solid #ddd;"><b>OFFICER NAME/NAME</b></td><td style="border:1px solid #ddd;">{esc(row.get('OFFICER NAME/NAME'))}</td></tr>
-      <tr><td style="border:1px solid #ddd;"><b>EMAIL</b></td><td style="border:1px solid #ddd;">{esc(row.get('EMAIL'))}</td></tr>
-      <tr><td style="border:1px solid #ddd;"><b>NO TEL</b></td><td style="border:1px solid #ddd;">{esc(row.get('NO TEL'))}</td></tr>
-      <tr><td style="border:1px solid #ddd;"><b>EXPIRED DATE</b></td><td style="border:1px solid #ddd;">{esc(exp_date)}</td></tr>
-      <tr><td style="border:1px solid #ddd;"><b>PC / SVR</b></td><td style="border:1px solid #ddd;">{esc(row.get('PC / SVR'))}</td></tr>
-      <tr><td style="border:1px solid #ddd;"><b>REMARK</b></td><td style="border:1px solid #ddd;">{esc(row.get('REMARK'))}</td></tr>
-    </table>
+        <div style="padding:20px;text-align:center;">
+          <img src="{https://www.kyrolsecuritylabs.com/images/logo%20(2).png}" alt="Kyrol Security Labs" style="max-width:220px;height:auto;" />
+        </div>
 
-    <p style="color:#666; margin-top: 12px; font-size: 12px;">
-      Generated at: {esc(datetime.now())}
-    </p>
+        <div style="padding:18px 24px;background:#0b5fff;color:#fff;">
+          <h2 style="margin:0;">Renewal Reminder</h2>
+          <p style="margin:6px 0 0 0;">Expiry Date: <strong>{esc(exp_date)}</strong></p>
+        </div>
+
+        <div style="padding:24px;">
+          <p style="margin:0 0 14px 0;color:#222;">
+            This is an automated renewal reminder. Details below:
+          </p>
+
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;width:38%;">Individual/Company</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;"><b>{esc(row.get("INDIVIDUAL/COMPANY"))}</b></td></tr>
+            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Officer Name</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("OFFICER NAME/NAME"))}</td></tr>
+            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Email</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("EMAIL"))}</td></tr>
+            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Phone</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("NO TEL"))}</td></tr>
+            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;">PC / SVR</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("PC / SVR"))}</td></tr>
+            <tr><td style="padding:10px;color:#666;">Remark</td><td style="padding:10px;color:#111;">{esc(row.get("REMARK"))}</td></tr>
+          </table>
+
+          <div style="margin-top:18px;padding:12px;background:#f0f4ff;border-radius:10px;border:1px solid #dbe6ff;color:#223;">
+            <b>Action:</b> Please proceed with renewal before expiry.
+          </div>
+
+          <p style="margin:16px 0 0 0;font-size:12px;color:#777;">
+            For inquiries: info@kyrolsecuritylabs.com | 03-8685 5032
+          </p>
+        </div>
+
+        <div style="padding:14px 22px;background:#fafafa;color:#888;font-size:12px;">
+          This email was generated automatically by the Renewal Reminder System.
+        </div>
+
+      </div>
+    </div>
   </body>
 </html>
 """.strip()
