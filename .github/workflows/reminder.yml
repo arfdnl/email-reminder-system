@@ -1,10 +1,9 @@
 name: Email Reminder Cron
 
 on:
-  schedule:
-    # Runs daily at 9AM Malaysia time (UTC+8 = 1AM UTC)
-    - cron: "0 1 * * *"
   workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * *"
 
 jobs:
   run-reminder:
