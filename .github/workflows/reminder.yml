@@ -2,26 +2,29 @@ name: Email Reminder Cron
 
 on:
   schedule:
-    # Runs daily at 9:00 AM Malaysia time (UTC+8) = 1:00 AM UTC
+    # Runs daily at 9AM Malaysia time (UTC+8 = 1AM UTC)
     - cron: "0 1 * * *"
   workflow_dispatch:
 
 jobs:
   run-reminder:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
 
-      - name: Run reminder
+      - name: Run reminder script
         env:
           REMIND_DAYS: ${{ secrets.REMIND_DAYS }}
           TEST_MODE: ${{ secrets.TEST_MODE }}
@@ -38,12 +41,3 @@ jobs:
           LOG_DIR: logs
           REPORT_DIR: reports
         run: python src/main.py
-
-      - name: Upload logs/reports/state
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-artifacts
-          path: |
-            logs/
-            reports/
-            state/
