@@ -52,9 +52,6 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
     def esc(x):
         s = "" if x is None else str(x)
         return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-    logo_url = "https://www.kyrolsecuritylabs.com/images/logo%20(2).png"
-
     return f"""
 <html>
   <body style="margin:0;padding:0;background:#f4f6fb;font-family:Arial, sans-serif;">
@@ -62,7 +59,7 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
       <div style="background:#ffffff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);overflow:hidden;">
 
         <div style="padding:20px;text-align:center;">
-          <img src="{logo_url}" alt="Kyrol Security Labs" style="max-width:220px;height:auto;" />
+          <img src="cid:kyrol_logo" alt="Kyrol Security Labs" style="max-width:220px;height:auto;" />
         </div>
 
         <div style="padding:18px 24px;background:#0b5fff;color:#fff;">
@@ -152,7 +149,7 @@ def main():
             logging.info(f"Skipping row={idx} (already sent) key={key}")
             continue
 
-        subject = f"Renewal Reminder (D-{stage_days}): expires {exp_date}"
+        subject = f"[Renewal Reminder] (D-{stage_days}): Expires {exp_date}"
         text_body = make_text_body(row, exp_date, stage_days)
         html_body = make_html_body(row, exp_date, stage_days)
 
@@ -162,6 +159,8 @@ def main():
                 FROM_EMAIL, to_email, subject,
                 text_body=text_body,
                 html_body=html_body,
+                inline_image_path="assets/kyrol_logo.png",
+                inline_image_cid="kyrol_logo",
                 retry_max=RETRY_MAX,
                 retry_backoff_seconds=RETRY_BACKOFF_SECONDS,
             )
