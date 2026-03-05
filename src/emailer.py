@@ -29,15 +29,16 @@ def send_email(
     msg["From"] = formataddr(("KyrolSecurityLabs", from_email))
     msg["To"] = to_email
     msg["Subject"] = subject
+    msg["Subject"] = smtp_user
 
     # Plain text
     msg.set_content(text_body)
 
-    # HTML (optional)
+    # HTML 
     if html_body:
         msg.add_alternative(html_body, subtype="html")
 
-        # Inline CID image (optional)
+        # Inline CID image 
         if inline_image_path:
             if not os.path.exists(inline_image_path):
                 raise FileNotFoundError(f"Inline image not found: {inline_image_path}")
