@@ -22,9 +22,10 @@ def send_email(
     retry_backoff_seconds: int = 2,
 ):
     msg = EmailMessage()
-    msg["From"] = formataddr(("KyrolSecurityLabs", from_email))
+    msg["From"] = formataddr(("KyrolSecurityLabs", smtp_user))
     msg["To"] = to_email
     msg["Subject"] = subject
+    print("DEBUG msg['From']:", msg["From"])
 
     msg.set_content(text_body)
 
