@@ -4,7 +4,7 @@ import socket
 import time
 from email.message import EmailMessage
 from email.utils import formataddr
-from config import FROM_EMAIL
+
 
 def send_email(
     smtp_host: str,
@@ -21,34 +21,25 @@ def send_email(
     retry_max: int = 3,
     retry_backoff_seconds: int = 2,
 ):
-    """
-    Send an email with optional HTML and optional CID inline image (Outlook-friendly).
-    In HTML use: <img src="cid:kyrol_logo">
-    """
     msg = EmailMessage()
     msg["From"] = formataddr(("KyrolSecurityLabs", from_email))
     msg["To"] = to_email
     msg["Subject"] = subject
-    msg["Subject"] = smtp_user
 
-    # Plain text
     msg.set_content(text_body)
 
-    # HTML 
     if html_body:
         msg.add_alternative(html_body, subtype="html")
 
-        # Inline CID image 
         if inline_image_path:
             if not os.path.exists(inline_image_path):
                 raise FileNotFoundError(f"Inline image not found: {inline_image_path}")
 
-            html_part = msg.get_payload()[-1]  # the HTML alternative part
+            html_part = msg.get_payload()[-1]
 
             with open(inline_image_path, "rb") as f:
                 img_bytes = f.read()
 
-            # Must include <> for Content-ID
             content_id = f"<{inline_image_cid}>"
 
             html_part.add_related(

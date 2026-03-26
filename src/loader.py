@@ -4,10 +4,10 @@ REQUIRED_COLS = [
     "INDIVIDUAL/COMPANY",
     "OFFICER NAME/NAME",
     "EMAIL",
+    "CUST EMAIL",
     "NO TEL",
     "EXPIRED DATE",
     "PC / SVR",
-    "REMARK",
 ]
 
 def load_clients(path: str) -> pd.DataFrame:

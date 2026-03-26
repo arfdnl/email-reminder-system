@@ -33,25 +33,48 @@ def setup_logging() -> str:
     return log_path
 
 
+def clean_value(value) -> str:
+    if value is None:
+        return ""
+    text = str(value).strip()
+    if text.lower() == "nan":
+        return ""
+    return text
+
+
+def format_date_ddmmyyyy(value) -> str:
+    if hasattr(value, "strftime"):
+        return value.strftime("%d/%m/%Y")
+    try:
+        dt = datetime.strptime(str(value), "%Y-%m-%d")
+        return dt.strftime("%d/%m/%Y")
+    except Exception:
+        return str(value)
+
+
 def make_text_body(row, exp_date, stage_days: int) -> str:
+    formatted_date = format_date_ddmmyyyy(exp_date)
+
     return f"""Reminder: Client Renewal Expiring Soon (D-{stage_days})
 
-INDIVIDUAL/COMPANY: {row['INDIVIDUAL/COMPANY']}
-OFFICER NAME/NAME: {row['OFFICER NAME/NAME']}
-EMAIL: {row['EMAIL']}
-NO TEL: {row['NO TEL']}
-EXPIRED DATE: {exp_date}
-PC / SVR: {row['PC / SVR']}
-REMARK: {row['REMARK']}
+INDIVIDUAL/COMPANY: {clean_value(row['INDIVIDUAL/COMPANY'])}
+OFFICER NAME/NAME: {clean_value(row['OFFICER NAME/NAME'])}
+EMAIL: {clean_value(row['CUST EMAIL'])}
+NO TEL: {clean_value(row['NO TEL'])}
+EXPIRED DATE: {formatted_date}
+PC / SVR: {clean_value(row['PC / SVR'])}
 
-Generated at: {datetime.now()}
+Generated at: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
 """
 
 
 def make_html_body(row, exp_date, stage_days: int) -> str:
+    formatted_date = format_date_ddmmyyyy(exp_date)
+
     def esc(x):
-        s = "" if x is None else str(x)
+        s = clean_value(x)
         return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
     return f"""
 <html>
   <body style="margin:0;padding:0;background:#f4f6fb;font-family:Arial, sans-serif;">
@@ -62,9 +85,12 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
           <img src="cid:kyrol_logo" alt="Kyrol Security Labs" style="max-width:220px;height:auto;" />
         </div>
 
-        <div style="padding:18px 24px;background:#0b5fff;color:#fff;">
+        <!-- HEADER -->
+        <div style="padding:18px 24px;background:#002250;color:#ffffff;">
           <h2 style="margin:0;">Renewal Reminder (D-{stage_days})</h2>
-          <p style="margin:6px 0 0 0;">Expiry Date: <strong>{esc(exp_date)}</strong></p>
+          <p style="margin:6px 0 0 0;color:#ffffff;">
+            Expiry Date: <strong style="color:#ffffff;">{formatted_date}</strong>
+          </p>
         </div>
 
         <div style="padding:24px;">
@@ -73,20 +99,35 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
           </p>
 
           <table style="width:100%;border-collapse:collapse;font-size:14px;">
-            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;width:38%;">Individual/Company</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;"><b>{esc(row.get("INDIVIDUAL/COMPANY"))}</b></td></tr>
-            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Officer Name</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("OFFICER NAME/NAME"))}</td></tr>
-            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Email</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("EMAIL"))}</td></tr>
-            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Phone</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("NO TEL"))}</td></tr>
-            <tr><td style="padding:10px;border-bottom:1px solid #eee;color:#666;">PC / SVR</td><td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("PC / SVR"))}</td></tr>
-            <tr><td style="padding:10px;color:#666;">Remark</td><td style="padding:10px;color:#111;">{esc(row.get("REMARK"))}</td></tr>
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;width:38%;">Individual/Company</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;"><b>{esc(row.get("INDIVIDUAL/COMPANY"))}</b></td>
+            </tr>
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Officer Name</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("OFFICER NAME/NAME"))}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Email</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("CUST EMAIL"))}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Phone</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("NO TEL"))}</td>
+            </tr>
+            <tr>
+              <td style="padding:10px;color:#666;">PC / SVR</td>
+              <td style="padding:10px;color:#111;">{esc(row.get("PC / SVR"))}</td>
+            </tr>
           </table>
 
-          <div style="margin-top:18px;padding:12px;background:#f0f4ff;border-radius:10px;border:1px solid #dbe6ff;color:#223;">
+          <!-- ACTION BOX (FIXED COLOR MATCHING) -->
+          <div style="margin-top:18px;padding:12px;background:#e6eef7;border-radius:10px;border:1px solid #b3c7e6;color:#002250;">
             <b>Action:</b> Please proceed with renewal before expiry.
           </div>
 
           <p style="margin:16px 0 0 0;font-size:12px;color:#777;">
-            For inquiries: info@kyrolsecuritylabs.com | 03-8685 5032
+            For inquiries: sales@kyrolsecuritylabs.com | 03-8685 5032
           </p>
         </div>
 
@@ -130,7 +171,6 @@ def main():
     not_stage = 0
 
     for idx, row, exp_date, days_left in candidates:
-        # Only send on exact schedule days (30, 7, 1)
         if days_left not in REMIND_SCHEDULE_DAYS:
             not_stage += 1
             continue
@@ -139,7 +179,10 @@ def main():
             logging.warning(f"Reached MAX_EMAILS_PER_RUN={MAX_EMAILS_PER_RUN}. Stopping sends.")
             break
 
-        real_email = str(row["EMAIL"]).strip()
+        raw_emails = str(row["EMAIL"]).strip()
+        email_list = [e.strip() for e in raw_emails.split(",") if e.strip()]
+        real_email = ", ".join(email_list)
+
         to_email = TEST_TO_EMAIL if TEST_MODE else real_email
 
         stage_days = days_left
@@ -149,7 +192,7 @@ def main():
             logging.info(f"Skipping row={idx} (already sent) key={key}")
             continue
 
-        subject = f"[Renewal Reminder] (D-{stage_days}): Expires {exp_date}"
+        subject = f"[Renewal Reminder] (D-{stage_days}): Expires {format_date_ddmmyyyy(exp_date)}"
         text_body = make_text_body(row, exp_date, stage_days)
         html_body = make_html_body(row, exp_date, stage_days)
 
