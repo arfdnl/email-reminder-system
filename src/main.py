@@ -1,5 +1,6 @@
 import os
 import logging
+import time
 from datetime import datetime
 
 from config import (
@@ -152,11 +153,13 @@ def validate_env():
 
 def main():
     log_path = setup_logging()
-    logging.info("Starting email reminder job...")
+    logging.info("Starting email reminder job.")
     logging.info(f"DATA_FILE={DATA_FILE} TEST_MODE={TEST_MODE}")
     logging.info(f"REMIND_SCHEDULE_DAYS={REMIND_SCHEDULE_DAYS} MAX_WINDOW_DAYS={MAX_WINDOW_DAYS}")
     logging.info(f"MAX_EMAILS_PER_RUN={MAX_EMAILS_PER_RUN}")
     logging.info(f"SENT_LOG_FILE={SENT_LOG_FILE}")
+
+    EMAIL_DELAY_SECONDS = 2
 
     validate_env()
 
@@ -212,6 +215,9 @@ def main():
 
             mark_sent(sent_log, key)
             save_sent_log(SENT_LOG_FILE, sent_log)
+
+            logging.info(f"Sleeping {EMAIL_DELAY_SECONDS}s before next email...")
+            time.sleep(EMAIL_DELAY_SECONDS)
 
         except Exception as e:
             failed += 1

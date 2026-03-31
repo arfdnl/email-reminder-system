@@ -25,7 +25,7 @@ def send_email(
     msg["From"] = formataddr(("KYROLSecurityLabs", smtp_user))
     msg["To"] = to_email
     msg["Subject"] = subject
-    print("DEBUG msg['From']:", msg["From"])
+    print("[EMAIL] ['From']:", msg["From"])
 
     msg.set_content(text_body)
 
@@ -69,6 +69,6 @@ def send_email(
             if attempt < retry_max:
                 time.sleep(retry_backoff_seconds * (2 ** (attempt - 1)))
             else:
-                break
+                break                   
 
     raise last_err if last_err else RuntimeError("Failed to send email")
