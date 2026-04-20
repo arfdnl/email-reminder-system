@@ -88,7 +88,7 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
 
         <!-- HEADER -->
         <div style="padding:18px 24px;background:#002250;color:#ffffff;">
-          <h2 style="margin:0;">Renewal Reminder (D-{stage_days})</h2>
+          <h2 style="margin:0;">Antivirus Renewal Reminder (D-{stage_days})</h2>
           <p style="margin:6px 0 0 0;color:#ffffff;">
             Expiry Date: <strong style="color:#ffffff;">{formatted_date}</strong>
           </p>
@@ -133,7 +133,7 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
         </div>
 
         <div style="padding:14px 22px;background:#fafafa;color:#888;font-size:12px;">
-          This email was generated automatically by the Renewal Reminder System.
+          This email was generated automatically by the Antivirus Renewal Reminder System.
         </div>
 
       </div>
@@ -195,7 +195,7 @@ def main():
             logging.info(f"Skipping row={idx} (already sent) key={key}")
             continue
 
-        subject = f"[Renewal Reminder] (D-{stage_days}): Expires {format_date_ddmmyyyy(exp_date)}"
+        subject = f"[Antivirus Renewal Reminder] (D-{stage_days}): Expires {format_date_ddmmyyyy(exp_date)}"
         text_body = make_text_body(row, exp_date, stage_days)
         html_body = make_html_body(row, exp_date, stage_days)
 
