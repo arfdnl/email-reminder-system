@@ -182,9 +182,22 @@ def main():
             logging.warning(f"Reached MAX_EMAILS_PER_RUN={MAX_EMAILS_PER_RUN}. Stopping sends.")
             break
 
-        raw_emails = str(row["EMAIL"]).strip()
-        email_list = [e.strip() for e in raw_emails.split(",") if e.strip()]
-        real_email = ", ".join(email_list)
+        # --- EMAIL column (C) ---
+        raw_main = str(row.get("EMAIL", "")).strip()
+        emails_main = [e.strip() for e in raw_main.split(",") if e.strip()]
+
+        # --- CUST EMAIL column (G) ---
+        raw_cust = str(row.get("CUST EMAIL", "")).strip()
+        emails_cust = [e.strip() for e in raw_cust.split(",") if e.strip()]
+
+        # --- COMBINE ---
+        all_emails = emails_main + emails_cust
+
+        # --- REMOVE DUPLICATES ---
+        unique_emails = list(dict.fromkeys(all_emails))
+
+        # --- FINAL ---
+        real_email = ", ".join(unique_emails)
 
         to_email = TEST_TO_EMAIL if TEST_MODE else real_email
 
