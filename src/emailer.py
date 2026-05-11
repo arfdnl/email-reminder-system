@@ -23,7 +23,8 @@ def send_email(
 ):
     msg = EmailMessage()
     msg["From"] = formataddr(("KYROLSecurityLabs", smtp_user))
-    msg["To"] = to_email
+    msg["To"] = smtp_user # sender shown
+    msg["Bcc"] = to_email # real recipients (hidden)
     msg["Subject"] = subject
     print("[EMAIL] ['From']:", msg["From"])
 
