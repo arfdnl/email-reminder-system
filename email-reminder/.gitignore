@@ -1,0 +1,18 @@
+# Environment variables (VERY IMPORTANT)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs and runtime data
+logs/
+reports/
+state/
+
+# VS Code settings (optional)
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
