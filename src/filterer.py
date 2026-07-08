@@ -22,8 +22,8 @@ def filter_expiring(df: pd.DataFrame, max_window_days: int):
     skipped = []
 
     for i, row in df.iterrows():
-        email = str(row.get("EMAIL", "")).strip()
-        exp = normalize_date(row.get("EXPIRED DATE"))
+        email = str(row.get("email", "")).strip()
+        exp = normalize_date(row.get("expired_date"))
 
         if not email or email.lower() == "nan":
             skipped.append((i, "missing_email"))

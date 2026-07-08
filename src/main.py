@@ -55,15 +55,17 @@ def format_date_ddmmyyyy(value) -> str:
 
 def make_text_body(row, exp_date, stage_days: int) -> str:
     formatted_date = format_date_ddmmyyyy(exp_date)
+    product = row.get("product", "Client")
+    detail_label = row.get("detail_label", "Detail")
 
-    return f"""Reminder: Client Renewal Expiring Soon (D-{stage_days})
+    return f"""Reminder: {product} Renewal Expiring Soon (D-{stage_days})
 
-INDIVIDUAL/COMPANY: {clean_value(row['INDIVIDUAL/COMPANY'])}
-OFFICER NAME/NAME: {clean_value(row['OFFICER NAME/NAME'])}
-EMAIL: {clean_value(row['CUST EMAIL'])}
-NO TEL: {clean_value(row['NO TEL'])}
+COMPANY: {clean_value(row.get("company"))}
+CONTACT: {clean_value(row.get("contact"))}
+EMAIL: {clean_value(row.get("cust_email") or row.get("email"))}
+NO TEL: {clean_value(row.get("phone"))}
 EXPIRED DATE: {formatted_date}
-PC / SVR: {clean_value(row['PC / SVR'])}
+{detail_label}: {clean_value(row.get("detail_value"))}
 
 Generated at: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
 """
@@ -71,6 +73,8 @@ Generated at: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
 
 def make_html_body(row, exp_date, stage_days: int) -> str:
     formatted_date = format_date_ddmmyyyy(exp_date)
+    product = row.get("product", "Client")
+    detail_label = row.get("detail_label", "Detail")
 
     def esc(x):
         s = clean_value(x)
@@ -88,7 +92,7 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
 
         <!-- HEADER -->
         <div style="padding:18px 24px;background:#002250;color:#ffffff;">
-          <h2 style="margin:0;">Antivirus Renewal Reminder (D-{stage_days})</h2>
+          <h2 style="margin:0;">{esc(product)} Renewal Reminder (D-{stage_days})</h2>
           <p style="margin:6px 0 0 0;color:#ffffff;">
             Expiry Date: <strong style="color:#ffffff;">{formatted_date}</strong>
           </p>
@@ -101,24 +105,24 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
 
           <table style="width:100%;border-collapse:collapse;font-size:14px;">
             <tr>
-              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;width:38%;">Individual/Company</td>
-              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;"><b>{esc(row.get("INDIVIDUAL/COMPANY"))}</b></td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;width:38%;">Company</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;"><b>{esc(row.get("company"))}</b></td>
             </tr>
             <tr>
-              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Officer Name</td>
-              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("OFFICER NAME/NAME"))}</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Contact</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("contact"))}</td>
             </tr>
             <tr>
               <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Email</td>
-              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("CUST EMAIL"))}</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("cust_email") or row.get("email"))}</td>
             </tr>
             <tr>
               <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Phone</td>
-              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("NO TEL"))}</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("phone"))}</td>
             </tr>
             <tr>
-              <td style="padding:10px;color:#666;">PC / SVR</td>
-              <td style="padding:10px;color:#111;">{esc(row.get("PC / SVR"))}</td>
+              <td style="padding:10px;color:#666;">{esc(detail_label)}</td>
+              <td style="padding:10px;color:#111;">{esc(row.get("detail_value"))}</td>
             </tr>
           </table>
 
@@ -133,7 +137,7 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
         </div>
 
         <div style="padding:14px 22px;background:#fafafa;color:#888;font-size:12px;">
-          This email was generated automatically by the Antivirus Renewal Reminder System.
+          This email was generated automatically by the {esc(product)} Renewal Reminder System.
         </div>
 
       </div>
@@ -182,12 +186,12 @@ def main():
             logging.warning(f"Reached MAX_EMAILS_PER_RUN={MAX_EMAILS_PER_RUN}. Stopping sends.")
             break
 
-        # --- EMAIL column (C) ---
-        raw_main = str(row.get("EMAIL", "")).strip()
+        # --- email column ---
+        raw_main = str(row.get("email", "")).strip()
         emails_main = [e.strip() for e in raw_main.split(",") if e.strip()]
 
-        # --- CUST EMAIL column (G) ---
-        raw_cust = str(row.get("CUST EMAIL", "")).strip()
+        # --- cust_email column (secondary recipients, optional per sheet) ---
+        raw_cust = str(row.get("cust_email", "")).strip()
         emails_cust = [e.strip() for e in raw_cust.split(",") if e.strip()]
 
         # --- COMBINE ---
@@ -202,13 +206,15 @@ def main():
         to_email = TEST_TO_EMAIL if TEST_MODE else real_email
 
         stage_days = days_left
-        key = make_key(real_email, exp_date, stage_days)
+        source_sheet = row.get("source_sheet", "")
+        key = make_key(f"{source_sheet}:{real_email}", exp_date, stage_days)
         if was_sent(sent_log, key):
             already_sent += 1
             logging.info(f"Skipping row={idx} (already sent) key={key}")
             continue
 
-        subject = f"[Antivirus Renewal Reminder] (D-{stage_days}): Expires {format_date_ddmmyyyy(exp_date)}"
+        product = row.get("product", "Client")
+        subject = f"[{product} Renewal Reminder] (D-{stage_days}): Expires {format_date_ddmmyyyy(exp_date)}"
         text_body = make_text_body(row, exp_date, stage_days)
         html_body = make_html_body(row, exp_date, stage_days)
 
