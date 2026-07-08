@@ -214,7 +214,9 @@ def main():
 
         stage_days = days_left
         source_sheet = row.get("source_sheet", "")
-        key = make_key(f"{source_sheet}:{real_email}", exp_date, stage_days)
+        # idx disambiguates rows that share the same sheet/email/expiry date
+        # (e.g. IILM has multiple distinct license rows expiring on the same day).
+        key = make_key(f"{source_sheet}:{idx}:{real_email}", exp_date, stage_days)
         if was_sent(sent_log, key):
             already_sent += 1
             logging.info(f"Skipping row={idx} (already sent) key={key}")

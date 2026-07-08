@@ -11,7 +11,7 @@ import pandas as pd
 # header row (e.g. PSP-FORTI has separate blocks per site). The loader finds
 # every occurrence of the header row and treats each as its own block.
 SHEET_CONFIGS = {
-    "clients": {
+    "AV": {
         "product": "Antivirus",
         "columns": {
             "company": "INDIVIDUAL/COMPANY",
@@ -78,6 +78,30 @@ SHEET_CONFIGS = {
         },
         "details": [("Quantity", "QUANTITY"), ("S/N", "S/N"), ("Remarks", "REMARKS")],
     },
+    "IILM": {
+        # No per-row company/email columns: every row is the same client (IILM),
+        # and notifications go to a fixed pair of addresses noted in the sheet
+        # footer rather than a per-row column.
+        "product": "IILM Renewal",
+        "product_column": "BRAND",
+        "fixed_company": "IILM",
+        "fixed_email": "iamarifdanial@gmail.com",
+        "columns": {
+            "expired_date": "END DATE",
+        },
+        "details": [("Product", "PRODUCT"), ("License Number", "LICENSE NUMBER"), ("Quantity", "QUANTITY"), ("S/N", "S/N")],
+    },
+    "M365": {
+        "product": "Microsoft 365",
+        "columns": {
+            "company": "COMPANY NAME",
+            "contact": "PERSON IN CHARGE",
+            "email": "EMAIL",
+            "phone": "PHONE NO",
+            "expired_date": "END DATE",
+        },
+        "details": [("Quantity", "QUANTITY"), ("Remarks", "REMARKS")],
+    },
 }
 
 # Normalized columns every row in the combined DataFrame will have.
@@ -115,20 +139,34 @@ def _load_sheet(xls: pd.ExcelFile, sheet_name: str, config: dict) -> pd.DataFram
     df = df.dropna(how="all")
 
     required_cols = list(columns.values()) + [src for _, src in detail_specs]
+    if config.get("product_column"):
+        required_cols.append(config["product_column"])
     missing = [src for src in required_cols if src not in df.columns]
     if missing:
         raise ValueError(f"Sheet '{sheet_name}' missing columns: {missing}")
 
-    out = pd.DataFrame()
+    # Pre-seed the index so scalar defaults (columns with no source mapping)
+    # broadcast to every row immediately, regardless of assignment order.
+    # Otherwise, if every early column is a scalar default, `out` stays a
+    # 0-row frame until the first real column is assigned, and pandas
+    # silently turns those earlier scalar columns into NaN on reindex.
+    out = pd.DataFrame(index=df.index)
     for norm_name in NORMALIZED_COLS:
         src_name = columns.get(norm_name)
         out[norm_name] = df[src_name] if src_name else ""
+
+    if "fixed_company" in config:
+        out["company"] = config["fixed_company"]
+    if "fixed_email" in config:
+        out["email"] = config["fixed_email"]
 
     out["details"] = [
         [(label, row[src_col]) for label, src_col in detail_specs]
         for _, row in df.iterrows()
     ]
-    out["product"] = config["product"]
+
+    product_col = config.get("product_column")
+    out["product"] = df[product_col] if product_col else config["product"]
     out["source_sheet"] = sheet_name
     return out
 
