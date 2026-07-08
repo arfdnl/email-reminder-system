@@ -1,5 +1,6 @@
 import os
 import logging
+import re
 import time
 from datetime import datetime
 
@@ -192,13 +193,13 @@ def main():
             logging.warning(f"Reached MAX_EMAILS_PER_RUN={MAX_EMAILS_PER_RUN}. Stopping sends.")
             break
 
-        # --- email column ---
+        # --- email column (sheets separate multiple addresses with , ; or /) ---
         raw_main = str(row.get("email", "")).strip()
-        emails_main = [e.strip() for e in raw_main.split(",") if e.strip()]
+        emails_main = [e.strip() for e in re.split(r"[,;/]+", raw_main) if e.strip()]
 
         # --- cust_email column (secondary recipients, optional per sheet) ---
         raw_cust = str(row.get("cust_email", "")).strip()
-        emails_cust = [e.strip() for e in raw_cust.split(",") if e.strip()]
+        emails_cust = [e.strip() for e in re.split(r"[,;/]+", raw_cust) if e.strip()]
 
         # --- COMBINE ---
         all_emails = emails_main + emails_cust

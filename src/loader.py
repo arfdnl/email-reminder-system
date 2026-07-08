@@ -45,6 +45,39 @@ SHEET_CONFIGS = {
         },
         "details": [("Quantity", "QUANTITY"), ("S/N", "S/N"), ("Remarks", "REMARKS")],
     },
+    "PLAN SELANGOR-FORTI": {
+        "product": "Fortinet (PLAN Selangor)",
+        "columns": {
+            "company": "COMPANY NAME",
+            "contact": "PERSON IN CHARGE",
+            "email": "EMAIL",
+            "phone": "PHONE NO",
+            "expired_date": "END DATE",
+        },
+        "details": [("Quantity", "QUANTITY"), ("S/N", "S/N"), ("Remarks", "REMARKS")],
+    },
+    "MD MERSING-FORTI": {
+        "product": "Fortinet (MD Mersing)",
+        "columns": {
+            "company": "COMPANY NAME",
+            "contact": "PERSON IN CHARGE",
+            "email": "EMAIL",
+            "phone": "PHONE NO",
+            "expired_date": "END DATE",
+        },
+        "details": [("Quantity", "QUANTITY"), ("S/N", "S/N"), ("Remarks", "REMARKS")],
+    },
+    "MP JASIN-FORTI": {
+        "product": "Fortinet (MP Jasin)",
+        "columns": {
+            "company": "COMPANY NAME",
+            "contact": "PERSON IN CHARGE",
+            "email": "EMAIL",
+            "phone": "PHONE NO",
+            "expired_date": "END DATE",
+        },
+        "details": [("Quantity", "QUANTITY"), ("S/N", "S/N"), ("Remarks", "REMARKS")],
+    },
 }
 
 # Normalized columns every row in the combined DataFrame will have.
