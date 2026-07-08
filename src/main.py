@@ -56,7 +56,9 @@ def format_date_ddmmyyyy(value) -> str:
 def make_text_body(row, exp_date, stage_days: int) -> str:
     formatted_date = format_date_ddmmyyyy(exp_date)
     product = row.get("product", "Client")
-    detail_label = row.get("detail_label", "Detail")
+    detail_lines = "\n".join(
+        f"{label}: {clean_value(value)}" for label, value in row.get("details", [])
+    )
 
     return f"""Reminder: {product} Renewal Expiring Soon (D-{stage_days})
 
@@ -65,7 +67,7 @@ CONTACT: {clean_value(row.get("contact"))}
 EMAIL: {clean_value(row.get("cust_email") or row.get("email"))}
 NO TEL: {clean_value(row.get("phone"))}
 EXPIRED DATE: {formatted_date}
-{detail_label}: {clean_value(row.get("detail_value"))}
+{detail_lines}
 
 Generated at: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
 """
@@ -74,11 +76,19 @@ Generated at: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
 def make_html_body(row, exp_date, stage_days: int) -> str:
     formatted_date = format_date_ddmmyyyy(exp_date)
     product = row.get("product", "Client")
-    detail_label = row.get("detail_label", "Detail")
 
     def esc(x):
         s = clean_value(x)
         return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    detail_rows_html = "".join(
+        f"""
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">{esc(label)}</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(value)}</td>
+            </tr>"""
+        for label, value in row.get("details", [])
+    )
 
     return f"""
 <html>
@@ -119,11 +129,7 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
             <tr>
               <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">Phone</td>
               <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(row.get("phone"))}</td>
-            </tr>
-            <tr>
-              <td style="padding:10px;color:#666;">{esc(detail_label)}</td>
-              <td style="padding:10px;color:#111;">{esc(row.get("detail_value"))}</td>
-            </tr>
+            </tr>{detail_rows_html}
           </table>
 
           <!-- ACTION BOX (FIXED COLOR MATCHING) -->
