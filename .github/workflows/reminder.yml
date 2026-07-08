@@ -23,9 +23,17 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
+      - name: Restore sent-log state
+        uses: actions/cache@v4
+        with:
+          path: state
+          key: sent-log-${{ github.run_id }}
+          restore-keys: |
+            sent-log-
+
       - name: Run reminder script
         env:
-          REMIND_DAYS: ${{ secrets.REMIND_DAYS }}
+          REMIND_SCHEDULE_DAYS: ${{ secrets.REMIND_DAYS }}
           TEST_MODE: ${{ secrets.TEST_MODE }}
           TEST_TO_EMAIL: ${{ secrets.TEST_TO_EMAIL }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
@@ -40,3 +48,13 @@ jobs:
           LOG_DIR: logs
           REPORT_DIR: reports
         run: python src/main.py
+
+      - name: Upload logs and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reminder-run-${{ github.run_id }}
+          path: |
+            logs/
+            reports/
+          retention-days: 30
