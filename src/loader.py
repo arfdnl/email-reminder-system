@@ -79,14 +79,12 @@ SHEET_CONFIGS = {
         "details": [("Quantity", "QUANTITY"), ("S/N", "S/N"), ("Remarks", "REMARKS")],
     },
     "IILM": {
-        # No per-row company/email columns: every row is the same client (IILM),
-        # and notifications go to a fixed pair of addresses noted in the sheet
-        # footer rather than a per-row column.
+        # No per-row company column: every row is the same client (IILM).
         "product": "IILM Renewal",
         "product_column": "BRAND",
         "fixed_company": "IILM",
-        "fixed_email": "iamarifdanial@gmail.com",
         "columns": {
+            "email": "EMAIL",
             "expired_date": "END DATE",
         },
         "details": [("Product", "PRODUCT"), ("License Number", "LICENSE NUMBER"), ("Quantity", "QUANTITY"), ("S/N", "S/N")],
