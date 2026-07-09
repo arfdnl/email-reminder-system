@@ -2,8 +2,14 @@ name: Email Reminder Cron
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 1 * * *"
+  # Scheduled trigger disabled: reminders now run from the company server
+  # via Task Scheduler + Docker (see run-reminder.ps1). workflow_dispatch
+  # is kept for manual test runs. Do not re-enable schedule: without also
+  # coordinating with the server job, or clients will get duplicate emails
+  # (the two dedup logs -- this workflow's cache vs. state/sent_log.json
+  # on the server -- are independent and don't know about each other).
+  # schedule:
+  #   - cron: "0 1 * * *"
 
 jobs:
   run-reminder:
