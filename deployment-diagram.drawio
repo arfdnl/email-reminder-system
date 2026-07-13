@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Deployment Diagram" id="deploy-diagram-1"><mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ================= TITLE ================= -->
+        <mxCell id="title" value="Antivirus &amp; Renewal Email Reminder System — Deployment Diagram" style="text;html=1;fontSize=18;fontStyle=1;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="10" width="700" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ================= NODE: Developer Workstation ================= -->
+        <mxCell id="devnode" value="Developer Workstation&#10;«device»&#10;Windows 10/11 + Docker Desktop (WSL2 backend)" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#dae8fc;strokeColor=#0d3d73;verticalAlign=top;spacingTop=8;fontStyle=1;fontSize=12;size=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="280" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="dev_art1" value="«artifact»&#10;email-reminder:latest&#10;(Linux image, python:3.12-slim)" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#ffffff;strokeColor=#5c6b7d;fontSize=10;" vertex="1" parent="devnode">
+          <mxGeometry x="20" y="60" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dev_art2" value="«artifact»&#10;Local Git Clone&#10;(email-reminder-system)" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#ffffff;strokeColor=#5c6b7d;fontSize=10;" vertex="1" parent="devnode">
+          <mxGeometry x="20" y="145" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ================= NODE: GitHub ================= -->
+        <mxCell id="githubnode" value="GitHub&#10;«device»&#10;Cloud source control &amp; CI runner" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f5f5f5;strokeColor=#16202e;verticalAlign=top;spacingTop=8;fontStyle=1;fontSize=12;size=14;" vertex="1" parent="1">
+          <mxGeometry x="400" y="70" width="280" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="gh_art1" value="«artifact»&#10;Source Repository&#10;(main branch)" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#ffffff;strokeColor=#5c6b7d;fontSize=10;" vertex="1" parent="githubnode">
+          <mxGeometry x="20" y="60" width="240" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gh_art2" value="«artifact»&#10;GitHub Actions Runner (Ubuntu)&#10;workflow_dispatch — manual test only" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#fdf3e0;strokeColor=#b8791a;fontSize=10;" vertex="1" parent="githubnode">
+          <mxGeometry x="20" y="135" width="240" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ================= NODE: Production Server ================= -->
+        <mxCell id="prodnode" value="Production Server&#10;«device»&#10;Windows Server 2019 Standard" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#d5e8d4;strokeColor=#1e7a4c;verticalAlign=top;spacingTop=8;fontStyle=1;fontSize=12;size=14;" vertex="1" parent="1">
+          <mxGeometry x="760" y="70" width="320" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="prod_art1" value="Docker Engine (Community Edition)&#10;installed via install-docker-ce.ps1" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#ffffff;strokeColor=#5c6b7d;fontSize=10;" vertex="1" parent="prodnode">
+          <mxGeometry x="20" y="60" width="280" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="prod_art2" value="«artifact»&#10;email-reminder:latest&#10;(Windows container — mcr.microsoft.com/windows/servercore:ltsc2019 + Python 3.12.10)" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#ffffff;strokeColor=#5c6b7d;fontSize=10;" vertex="1" parent="prodnode">
+          <mxGeometry x="20" y="125" width="280" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="prod_art3" value="Windows Task Scheduler&#10;task: EmailReminderDaily — daily 09:00 MYT" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#fbeed7;strokeColor=#93590a;fontSize=10;" vertex="1" parent="prodnode">
+          <mxGeometry x="20" y="210" width="280" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="prod_art4" value="«artifact»&#10;Host Storage (volume-mounted, not in image)&#10;clients.xlsx · sent_log.json · .env · logs/ · reports/" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#ffffff;strokeColor=#5c6b7d;fontSize=10;" vertex="1" parent="prodnode">
+          <mxGeometry x="20" y="275" width="280" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ================= NODE: Enterprise Mail Relay (external) ================= -->
+        <mxCell id="mailnode" value="Enterprise Mail Relay&#10;«external system»" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f8cecc;strokeColor=#8a1f2b;verticalAlign=top;spacingTop=8;fontStyle=1;fontSize=12;size=14;" vertex="1" parent="1">
+          <mxGeometry x="760" y="540" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="mail_art1" value="smtp.office365.com : 587 (TLS)&#10;noreply@kyrolsecuritylabs.com" style="shape=note;whiteSpace=wrap;html=1;size=16;align=center;fillColor=#ffffff;strokeColor=#5c6b7d;fontSize=10;" vertex="1" parent="mailnode">
+          <mxGeometry x="20" y="55" width="280" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ================= COMMUNICATION PATHS ================= -->
+        <mxCell id="edge1" value="git push" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=11;fontStyle=1;" edge="1" parent="1" source="devnode" target="githubnode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge2" value="git pull / clone" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=11;fontStyle=1;" edge="1" parent="1" source="githubnode" target="prodnode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge3" value="TLS · port 587" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=11;fontStyle=1;strokeColor=#8a1f2b;" edge="1" parent="1" source="prodnode" target="mailnode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge4" value="TLS · port 587&#10;(manual test runs only)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;fontSize=10;fontStyle=2;strokeColor=#b8791a;exitX=0.5;exitY=1;entryX=0.15;entryY=0;" edge="1" parent="1" source="gh_art2" target="mailnode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ================= LEGEND ================= -->
+        <mxCell id="legend" value="Solid line = active production path (daily, automatic)&#10;Dashed line = manual/testing path only (GitHub Actions schedule disabled to prevent duplicate sends)" style="text;html=1;fontSize=10;fontStyle=2;align=left;verticalAlign=top;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="40" y="700" width="620" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel></diagram>
+</mxfile>

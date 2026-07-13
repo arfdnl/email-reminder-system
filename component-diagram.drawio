@@ -1,0 +1,155 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Component Diagram" id="component-diagram-4"><mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1150" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ================= TITLE ================= -->
+        <mxCell id="title" value="Antivirus &amp; Renewal Email Reminder System — Component Diagram (src/)" style="text;html=1;fontSize=18;fontStyle=1;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="10" width="800" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ================= main.py (requirer) ================= -->
+        <mxCell id="main" value="main.py&#10;«component»&#10;Orchestrator" style="shape=component;align=center;verticalAlign=top;spacingTop=14;spacingLeft=18;whiteSpace=wrap;html=1;fillColor=#16202e;fontColor=#ffffff;strokeColor=#0d3d73;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="60" width="200" height="640" as="geometry" />
+        </mxCell>
+
+        <!-- required-interface sockets (open circles) on main.py's right edge -->
+        <mxCell id="s_config" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#0d3d73;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="252" y="92" width="16" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="s_loader" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#0d3d73;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="252" y="202" width="16" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="s_filterer" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#0d3d73;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="252" y="312" width="16" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="s_emailer" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#0d3d73;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="252" y="422" width="16" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="s_sentlog" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#0d3d73;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="252" y="532" width="16" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="s_report" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#0d3d73;strokeWidth=2.5;" vertex="1" parent="1">
+          <mxGeometry x="252" y="642" width="16" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- ================= provider components ================= -->
+        <mxCell id="config" value="config.py&#10;«component»" style="shape=component;align=center;verticalAlign=middle;spacingLeft=18;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="60" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l_config" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0d3d73;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="632" y="92" width="16" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="loader" value="loader.py&#10;«component»&#10;(SHEET_CONFIGS — config-driven)" style="shape=component;align=center;verticalAlign=middle;spacingLeft=18;whiteSpace=wrap;html=1;fillColor=#e4edf7;strokeColor=#0d3d73;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="170" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l_loader" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0d3d73;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="632" y="202" width="16" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="filterer" value="filterer.py&#10;«component»" style="shape=component;align=center;verticalAlign=middle;spacingLeft=18;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="280" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l_filterer" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0d3d73;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="632" y="312" width="16" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="emailer" value="emailer.py&#10;«component»" style="shape=component;align=center;verticalAlign=middle;spacingLeft=18;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="390" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l_emailer" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0d3d73;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="632" y="422" width="16" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sentlog" value="sentlog.py&#10;«component»" style="shape=component;align=center;verticalAlign=middle;spacingLeft=18;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="500" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l_sentlog" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0d3d73;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="632" y="532" width="16" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="report" value="report.py&#10;«component»" style="shape=component;align=center;verticalAlign=middle;spacingLeft=18;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="610" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l_report" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0d3d73;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="632" y="642" width="16" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- ================= CONNECTOR LINES (socket -> lollipop, no labels on the edges themselves) ================= -->
+        <mxCell id="c_config" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#0d3d73;" edge="1" parent="1" source="s_config" target="l_config">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c_loader" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#0d3d73;" edge="1" parent="1" source="s_loader" target="l_loader">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c_filterer" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#0d3d73;" edge="1" parent="1" source="s_filterer" target="l_filterer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c_emailer" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#0d3d73;" edge="1" parent="1" source="s_emailer" target="l_emailer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sentlog" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#0d3d73;" edge="1" parent="1" source="s_sentlog" target="l_sentlog">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c_report" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#0d3d73;" edge="1" parent="1" source="s_report" target="l_report">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ================= STANDALONE INTERFACE LABELS (proper «interface» names, real function noted below) ================= -->
+        <mxCell id="t_config" value="«interface» ISettingsProvider" style="text;html=1;fontSize=11;fontStyle=2;align=center;verticalAlign=middle;fontColor=#0d3d73;" vertex="1" parent="1">
+          <mxGeometry x="290" y="82" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tt_config" value="realized by: module-level settings" style="text;html=1;fontSize=9;fontStyle=3;align=center;verticalAlign=middle;fontColor=#67788c;" vertex="1" parent="1">
+          <mxGeometry x="290" y="100" width="330" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t_loader" value="«interface» IClientDataLoader" style="text;html=1;fontSize=11;fontStyle=2;align=center;verticalAlign=middle;fontColor=#0d3d73;" vertex="1" parent="1">
+          <mxGeometry x="290" y="192" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tt_loader" value="realized by: load_clients()" style="text;html=1;fontSize=9;fontStyle=3;align=center;verticalAlign=middle;fontColor=#67788c;" vertex="1" parent="1">
+          <mxGeometry x="290" y="210" width="330" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t_filterer" value="«interface» IExpiryFilter" style="text;html=1;fontSize=11;fontStyle=2;align=center;verticalAlign=middle;fontColor=#0d3d73;" vertex="1" parent="1">
+          <mxGeometry x="290" y="302" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tt_filterer" value="realized by: filter_expiring()" style="text;html=1;fontSize=9;fontStyle=3;align=center;verticalAlign=middle;fontColor=#67788c;" vertex="1" parent="1">
+          <mxGeometry x="290" y="320" width="330" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t_emailer" value="«interface» IEmailDispatcher" style="text;html=1;fontSize=11;fontStyle=2;align=center;verticalAlign=middle;fontColor=#0d3d73;" vertex="1" parent="1">
+          <mxGeometry x="290" y="412" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tt_emailer" value="realized by: send_email()" style="text;html=1;fontSize=9;fontStyle=3;align=center;verticalAlign=middle;fontColor=#67788c;" vertex="1" parent="1">
+          <mxGeometry x="290" y="430" width="330" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t_sentlog" value="«interface» IDeduplicationLog" style="text;html=1;fontSize=11;fontStyle=2;align=center;verticalAlign=middle;fontColor=#0d3d73;" vertex="1" parent="1">
+          <mxGeometry x="290" y="522" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tt_sentlog" value="realized by: was_sent(), mark_sent()" style="text;html=1;fontSize=9;fontStyle=3;align=center;verticalAlign=middle;fontColor=#67788c;" vertex="1" parent="1">
+          <mxGeometry x="290" y="540" width="330" height="16" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t_report" value="«interface» IReportWriter" style="text;html=1;fontSize=11;fontStyle=2;align=center;verticalAlign=middle;fontColor=#0d3d73;" vertex="1" parent="1">
+          <mxGeometry x="290" y="632" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tt_report" value="realized by: write_summary()" style="text;html=1;fontSize=9;fontStyle=3;align=center;verticalAlign=middle;fontColor=#67788c;" vertex="1" parent="1">
+          <mxGeometry x="290" y="650" width="330" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- ================= CALLOUT ================= -->
+        <mxCell id="loader_callout" value="Config-driven, not hardcoded: SHEET_CONFIGS declares&#10;each sheet's column mapping, detail fields, and&#10;fixed_company / fixed_email / product_column overrides —&#10;adding a 9th sheet needs no changes to IClientDataLoader's&#10;implementation itself." style="shape=note;whiteSpace=wrap;html=1;size=16;align=left;spacingLeft=6;fillColor=#fdf3e0;strokeColor=#b8791a;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="720" width="380" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ================= LEGEND ================= -->
+        <mxCell id="legend" value="○ (open circle) = required interface — what main.py needs.   ● (ringed circle) = provided interface — what each module exposes.&#10;A line connects each required socket to the matching provided interface, labeled with the proper «interface» name;&#10;the real function that realizes it is noted underneath for traceability back to the source code." style="text;html=1;fontSize=10;fontStyle=2;align=left;verticalAlign=top;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="60" y="720" width="560" height="55" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel></diagram>
+</mxfile>

@@ -1,0 +1,252 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram name="Sequence Diagram" id="sequence-diagram-2"><mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Sequence Diagram — One Daily Reminder Run (Simplified)" style="text;html=1;fontSize=15;fontStyle=1;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="30" y="6" width="700" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="hdr_ts" value="Task Scheduler" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#16202e;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="22" y="36" width="130" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_main" value="main.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#16202e;fontColor=#ffffff;strokeColor=#0d3d73;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="36" width="130" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_data" value="config + loader + filterer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="390" y="36" width="130" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_sent" value="sentlog.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="36" width="130" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_eml" value="emailer.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="770" y="36" width="130" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_ext" value="Mail Relay (SMTP)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#8a1f2b;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="36" width="130" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr_rpt" value="report.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef2f6;strokeColor=#33465c;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="36" width="130" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ll_ts" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#9aa7b5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="87" y="68" as="sourcePoint" />
+            <mxPoint x="87" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_main" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#9aa7b5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="68" as="sourcePoint" />
+            <mxPoint x="265" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_data" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#9aa7b5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="455" y="68" as="sourcePoint" />
+            <mxPoint x="455" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_sent" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#9aa7b5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="645" y="68" as="sourcePoint" />
+            <mxPoint x="645" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_eml" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#9aa7b5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="835" y="68" as="sourcePoint" />
+            <mxPoint x="835" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_ext" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#9aa7b5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1025" y="68" as="sourcePoint" />
+            <mxPoint x="1025" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll_rpt" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#9aa7b5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1215" y="68" as="sourcePoint" />
+            <mxPoint x="1215" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="lbl_m1" value="1: run() — daily 09:00 MYT" style="text;html=1;fontSize=9;fontStyle=1;align=left;verticalAlign=bottom;fontColor=#16202e;" vertex="1" parent="1">
+          <mxGeometry x="90" y="88" width="260" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m1" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="87" y="106" as="sourcePoint" />
+            <mxPoint x="265" y="106" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="lbl_m2" value="2: load_clients() + filter_expiring(df, MAX_WINDOW_DAYS)" style="text;html=1;fontSize=9;fontStyle=1;align=left;verticalAlign=bottom;fontColor=#16202e;" vertex="1" parent="1">
+          <mxGeometry x="270" y="120" width="440" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m2" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="138" as="sourcePoint" />
+            <mxPoint x="455" y="138" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_m2r" value="candidates (expiry within 30 days)" style="text;html=1;fontSize=8;fontStyle=3;align=left;verticalAlign=top;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="270" y="150" width="300" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m2r" style="html=1;endArrow=open;dashed=1;strokeColor=#5c6b7d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="455" y="166" as="sourcePoint" />
+            <mxPoint x="265" y="166" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="lbl_m3" value="3: load_sent_log()" style="text;html=1;fontSize=9;fontStyle=1;align=left;verticalAlign=bottom;fontColor=#16202e;" vertex="1" parent="1">
+          <mxGeometry x="270" y="182" width="240" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m3" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="200" as="sourcePoint" />
+            <mxPoint x="645" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_m3r" value="sent_log" style="text;html=1;fontSize=8;fontStyle=3;align=left;verticalAlign=top;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="270" y="212" width="200" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m3r" style="html=1;endArrow=open;dashed=1;strokeColor=#5c6b7d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="645" y="228" as="sourcePoint" />
+            <mxPoint x="265" y="228" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="frame_loop" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#5c6b7d;strokeWidth=1.2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="248" width="1240" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="tag_loop" value="loop" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#e4edf7;strokeColor=#5c6b7d;fontSize=9;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="248" width="48" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="guard_loop" value="[ for each candidate — until emailed &#8805; MAX_EMAILS_PER_RUN ]" style="text;html=1;fontSize=8;fontStyle=2;align=left;verticalAlign=middle;fontColor=#33465c;" vertex="1" parent="1">
+          <mxGeometry x="112" y="248" width="500" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lbl_m4" value="4: make_key() + was_sent(key)?" style="text;html=1;fontSize=9;fontStyle=1;align=left;verticalAlign=bottom;fontColor=#16202e;" vertex="1" parent="1">
+          <mxGeometry x="270" y="280" width="320" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m4" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="298" as="sourcePoint" />
+            <mxPoint x="645" y="298" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_m4r" value="True / False" style="text;html=1;fontSize=8;fontStyle=3;align=left;verticalAlign=top;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="270" y="310" width="160" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m4r" style="html=1;endArrow=open;dashed=1;strokeColor=#5c6b7d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="645" y="326" as="sourcePoint" />
+            <mxPoint x="265" y="326" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="frame_alt" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#5c6b7d;strokeWidth=1.2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="80" y="344" width="1200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="tag_alt" value="alt" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;fillColor=#e4edf7;strokeColor=#5c6b7d;fontSize=9;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="80" y="344" width="42" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="guard_alt_a" value="[ not due  OR  was_sent  OR  cap reached ]" style="text;html=1;fontSize=8;fontStyle=2;align=left;verticalAlign=middle;fontColor=#33465c;" vertex="1" parent="1">
+          <mxGeometry x="128" y="344" width="420" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lbl_self1" value="skip candidate / stop run" style="text;html=1;fontSize=8;fontStyle=3;align=left;verticalAlign=bottom;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="270" y="368" width="220" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_self1" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;edgeStyle=none;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="384" as="sourcePoint" />
+            <mxPoint x="265" y="404" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="360" y="384" />
+              <mxPoint x="360" y="404" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="divider_alt" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#5c6b7d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="420" as="sourcePoint" />
+            <mxPoint x="1280" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="guard_alt_b" value="[ eligible — on schedule, not yet sent, under cap ]" style="text;html=1;fontSize=8;fontStyle=2;align=left;verticalAlign=middle;fontColor=#33465c;" vertex="1" parent="1">
+          <mxGeometry x="90" y="424" width="440" height="18" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lbl_m5" value="5: send_email(..., retry_max, retry_backoff_seconds)" style="text;html=1;fontSize=9;fontStyle=1;align=left;verticalAlign=bottom;fontColor=#16202e;" vertex="1" parent="1">
+          <mxGeometry x="270" y="452" width="480" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m5" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="470" as="sourcePoint" />
+            <mxPoint x="835" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="lbl_m6" value="SMTP AUTH + DATA (TLS · port 587)" style="text;html=1;fontSize=9;fontStyle=1;align=left;verticalAlign=bottom;fontColor=#16202e;" vertex="1" parent="1">
+          <mxGeometry x="840" y="472" width="280" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m6" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="835" y="490" as="sourcePoint" />
+            <mxPoint x="1025" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="lbl_m7r" value="success, or exception after retry_max attempts (see Figure 3.1)" style="text;html=1;fontSize=8;fontStyle=3;align=left;verticalAlign=top;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="270" y="510" width="560" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m7r" style="html=1;endArrow=open;dashed=1;strokeColor=#5c6b7d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="835" y="526" as="sourcePoint" />
+            <mxPoint x="265" y="526" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="lbl_m8" value="6: mark_sent(key) + save_sent_log() — only if step 5 succeeded" style="text;html=1;fontSize=9;fontStyle=1;align=left;verticalAlign=bottom;fontColor=#16202e;" vertex="1" parent="1">
+          <mxGeometry x="270" y="522" width="480" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m8" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="538" as="sourcePoint" />
+            <mxPoint x="645" y="538" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="lbl_m9" value="7: write_summary(REPORT_DIR, summary)" style="text;html=1;fontSize=9;fontStyle=1;align=left;verticalAlign=bottom;fontColor=#16202e;" vertex="1" parent="1">
+          <mxGeometry x="270" y="606" width="380" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m9" style="html=1;endArrow=block;endFill=1;strokeColor=#0d3d73;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="624" as="sourcePoint" />
+            <mxPoint x="1215" y="624" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_m9r" value="report_path" style="text;html=1;fontSize=8;fontStyle=3;align=left;verticalAlign=top;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="270" y="636" width="200" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_m9r" style="html=1;endArrow=open;dashed=1;strokeColor=#5c6b7d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1215" y="652" as="sourcePoint" />
+            <mxPoint x="265" y="652" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="legend" value="Solid arrow = call.  Dashed arrow = return.  loop / alt boxes = combined fragments, matching the branches in the Flowchart (Fig. 3.1)." style="text;html=1;fontSize=8;fontStyle=2;align=left;verticalAlign=top;fontColor=#5c6b7d;" vertex="1" parent="1">
+          <mxGeometry x="30" y="700" width="900" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel></diagram>
+</mxfile>
