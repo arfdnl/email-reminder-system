@@ -19,3 +19,6 @@ Thumbs.db
 
 # Excel lock files
 ~$*.xlsx
+
+# Local presentation demo (safe test runner) artifacts
+demo/
