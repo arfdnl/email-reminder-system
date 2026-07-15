@@ -40,13 +40,13 @@ def build_demo_data():
     rows = [
         {"COMPANY NAME": "Demo Alpha Sdn. Bhd.", "PERSON IN CHARGE": "Encik Demo Alpha",
          "EMAIL": "demo.alpha@example.com", "PHONE NO": "03-0000 0001",
-         "END DATE": today + timedelta(days=30), "QUANTITY": 1, "REMARKS": "Demo record - D-30 milestone"},
+         "END DATE": today + timedelta(days=30), "QUANTITY": 1, "REMARKS": "satuduatiga"},
         {"COMPANY NAME": "Demo Beta Sdn. Bhd.", "PERSON IN CHARGE": "Encik Demo Beta",
          "EMAIL": "demo.beta@example.com", "PHONE NO": "03-0000 0002",
-         "END DATE": today + timedelta(days=7), "QUANTITY": 1, "REMARKS": "Demo record - D-7 milestone"},
+         "END DATE": today + timedelta(days=7), "QUANTITY": 1, "REMARKS": "satuduatiga"},
         {"COMPANY NAME": "Demo Gamma Sdn. Bhd.", "PERSON IN CHARGE": "Encik Demo Gamma",
          "EMAIL": "demo.gamma@example.com", "PHONE NO": "03-0000 0003",
-         "END DATE": today + timedelta(days=1), "QUANTITY": 1, "REMARKS": "Demo record - D-1 milestone"},
+         "END DATE": today + timedelta(days=1), "QUANTITY": 1, "REMARKS": "satuduatiga"},
     ]
     df = pd.DataFrame(rows, columns=[
         "COMPANY NAME", "PERSON IN CHARGE", "EMAIL", "PHONE NO", "END DATE", "QUANTITY", "REMARKS"])
