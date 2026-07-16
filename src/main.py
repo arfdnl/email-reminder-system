@@ -64,7 +64,7 @@ def stage_label(row, days_left: int) -> str:
     if months is not None and str(months).strip() and str(months).lower() != "nan":
         months = int(float(months))
         unit = "Month" if months == 1 else "Months"
-        return f"{months} {unit} before"
+        return f"{months} {unit}"
     return f"D-{days_left}"
 
 
