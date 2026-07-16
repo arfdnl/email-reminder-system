@@ -237,7 +237,7 @@ def make_html_body_compact(row, exp_date, label: str) -> str:
 
           <!-- ACTION BOX -->
           <div style="margin-top:18px;padding:12px;background:#e6eef7;border-radius:10px;border:1px solid #b3c7e6;color:#002250;">
-            <b>Action:</b> Please proceed with renewal 3 months before expiry.
+            <b>Action:</b> Please proceed with renewal before expiry.
           </div>
 
           <p style="margin:16px 0 0 0;font-size:12px;color:#777;">
