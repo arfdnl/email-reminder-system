@@ -54,6 +54,20 @@ def format_date_ddmmyyyy(value) -> str:
         return str(value)
 
 
+def stage_label(row, days_left: int) -> str:
+    """Human-readable name for the reminder stage.
+
+    Month-based sheets (remind_months_before) read as "3 Months before";
+    everything else keeps the classic "D-30" / "D-7" / "D-1" form.
+    """
+    months = row.get("remind_months_before")
+    if months is not None and str(months).strip() and str(months).lower() != "nan":
+        months = int(float(months))
+        unit = "Month" if months == 1 else "Months"
+        return f"{months} {unit} before"
+    return f"D-{days_left}"
+
+
 def make_text_body(row, exp_date, stage_days: int) -> str:
     formatted_date = format_date_ddmmyyyy(exp_date)
     product = row.get("product", "Client")
@@ -154,6 +168,94 @@ def make_html_body(row, exp_date, stage_days: int) -> str:
 """.strip()
 
 
+def make_text_body_compact(row, exp_date, label: str) -> str:
+    formatted_date = format_date_ddmmyyyy(exp_date)
+    product = row.get("product", "Client")
+    detail_lines = "\n".join(
+        f"{lbl}: {clean_value(value)}" for lbl, value in row.get("details", [])
+    )
+
+    return f"""Reminder: {product} Renewal Expiring Soon ({label})
+
+COMPANY: {clean_value(row.get("company"))}
+{detail_lines}
+EXPIRY DATE: {formatted_date}
+
+Generated at: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
+"""
+
+
+def make_html_body_compact(row, exp_date, label: str) -> str:
+    """Compact reminder layout: same visual shell as make_html_body (logo,
+    header, action box, footer) but the detail table shows only Company and
+    Remarks, and the stage reads "3 Months before" instead of "D-30"."""
+    formatted_date = format_date_ddmmyyyy(exp_date)
+    product = row.get("product", "Client")
+
+    def esc(x):
+        s = clean_value(x)
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    detail_rows_html = "".join(
+        f"""
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;">{esc(lbl)}</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;">{esc(value)}</td>
+            </tr>"""
+        for lbl, value in row.get("details", [])
+    )
+
+    return f"""
+<html>
+  <body style="margin:0;padding:0;background:#f4f6fb;font-family:Arial, sans-serif;">
+    <div style="max-width:680px;margin:0 auto;padding:24px;">
+      <div style="background:#ffffff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);overflow:hidden;">
+
+        <div style="padding:20px;text-align:center;">
+          <img src="cid:kyrol_logo" alt="Kyrol Security Labs" style="max-width:220px;height:auto;" />
+        </div>
+
+        <!-- HEADER -->
+        <div style="padding:18px 24px;background:#002250;color:#ffffff;">
+          <h2 style="margin:0;">{esc(product)} Renewal Reminder ({esc(label)})</h2>
+          <p style="margin:6px 0 0 0;color:#ffffff;">
+            Expiry Date: <strong style="color:#ffffff;">{formatted_date}</strong>
+          </p>
+        </div>
+
+        <div style="padding:24px;">
+          <p style="margin:0 0 14px 0;color:#222;">
+            This is an automated renewal reminder. Details below:
+          </p>
+
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tr>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#666;width:38%;">Company</td>
+              <td style="padding:10px;border-bottom:1px solid #eee;color:#111;"><b>{esc(row.get("company"))}</b></td>
+            </tr>{detail_rows_html}
+          </table>
+
+          <!-- ACTION BOX -->
+          <div style="margin-top:18px;padding:12px;background:#e6eef7;border-radius:10px;border:1px solid #b3c7e6;color:#002250;">
+            <b>Action:</b> Please proceed with renewal 3 months before expiry.
+          </div>
+
+          <p style="margin:16px 0 0 0;font-size:12px;color:#777;">
+            For inquiries: sales@kyrolsecuritylabs.com | 03-8685 5032
+          </p>
+        </div>
+
+        <div style="padding:14px 22px;background:#fafafa;color:#888;font-size:12px;">
+          This email was generated automatically by the {esc(product)} Renewal Reminder System.
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>
+""".strip()
+
+
 def validate_env():
     if TEST_MODE and not TEST_TO_EMAIL:
         raise ValueError("TEST_MODE is true but TEST_TO_EMAIL is empty.")
@@ -175,7 +277,7 @@ def main():
     validate_env()
 
     df = load_clients(DATA_FILE)
-    candidates, skipped = filter_expiring(df, MAX_WINDOW_DAYS)
+    candidates, skipped = filter_expiring(df, REMIND_SCHEDULE_DAYS)
 
     sent_log = load_sent_log(SENT_LOG_FILE)
 
@@ -184,8 +286,8 @@ def main():
     already_sent = 0
     not_stage = 0
 
-    for idx, row, exp_date, days_left in candidates:
-        if days_left not in REMIND_SCHEDULE_DAYS:
+    for idx, row, exp_date, days_left, schedule_days in candidates:
+        if days_left not in schedule_days:
             not_stage += 1
             continue
 
@@ -223,9 +325,15 @@ def main():
             continue
 
         product = row.get("product", "Client")
-        subject = f"[{product} Renewal Reminder] (D-{stage_days}): Expires {format_date_ddmmyyyy(exp_date)}"
-        text_body = make_text_body(row, exp_date, stage_days)
-        html_body = make_html_body(row, exp_date, stage_days)
+        label = stage_label(row, stage_days)
+        subject = f"[{product} Renewal Reminder] ({label}): Expires {format_date_ddmmyyyy(exp_date)}"
+
+        if row.get("email_layout") == "compact":
+            text_body = make_text_body_compact(row, exp_date, label)
+            html_body = make_html_body_compact(row, exp_date, label)
+        else:
+            text_body = make_text_body(row, exp_date, stage_days)
+            html_body = make_html_body(row, exp_date, stage_days)
 
         try:
             send_email(
@@ -254,8 +362,8 @@ def main():
     summary = (
         f"Run summary:\n"
         f"- Total rows: {len(df)}\n"
-        f"- Candidates in window (<= {MAX_WINDOW_DAYS} days): {len(candidates)}\n"
-        f"- On schedule (days_left in {REMIND_SCHEDULE_DAYS}): {len(candidates) - not_stage}\n"
+        f"- Candidates in reminder window (default <= {MAX_WINDOW_DAYS} days; month-based sheets wider): {len(candidates)}\n"
+        f"- On schedule (matched their sheet's reminder stage): {len(candidates) - not_stage}\n"
         f"- Emailed: {emailed}\n"
         f"- Already sent (skipped): {already_sent}\n"
         f"- Failed: {failed}\n"

@@ -100,6 +100,34 @@ SHEET_CONFIGS = {
         },
         "details": [("Quantity", "QUANTITY"), ("Remarks", "REMARKS")],
     },
+    # --- Internal Kyrol license renewals ---------------------------------
+    # These two sheets remind ONCE, three calendar months before expiry
+    # (see "remind_months_before"), instead of the default 30/7/1 day schedule.
+    # They also use the "compact" email layout: the reminder table shows only
+    # Company + Remarks (see make_html_body_compact / make_text_body_compact
+    # in main.py). Everything else in the pipeline treats them like any sheet.
+    "License Pentest": {
+        "product": "Pentest License",
+        "remind_months_before": 3,
+        "email_layout": "compact",
+        "columns": {
+            "company": "COMPANY NAME",
+            "email": "EMAIL",
+            "expired_date": "EXPIRY DATE",
+        },
+        "details": [("Remarks", "REMARKS")],
+    },
+    "License SOC": {
+        "product": "SOC License",
+        "remind_months_before": 3,
+        "email_layout": "compact",
+        "columns": {
+            "company": "COMPANY NAME",
+            "email": "EMAIL",
+            "expired_date": "EXPIRY DATE",
+        },
+        "details": [("Remarks", "REMARKS")],
+    },
 }
 
 # Normalized columns every row in the combined DataFrame will have.
@@ -166,6 +194,11 @@ def _load_sheet(xls: pd.ExcelFile, sheet_name: str, config: dict) -> pd.DataFram
     product_col = config.get("product_column")
     out["product"] = df[product_col] if product_col else config["product"]
     out["source_sheet"] = sheet_name
+
+    # Per-sheet reminder scheduling / rendering metadata (None -> use the
+    # global day-offset schedule and the standard email layout).
+    out["remind_months_before"] = config.get("remind_months_before")
+    out["email_layout"] = config.get("email_layout", "standard")
     return out
 
 
