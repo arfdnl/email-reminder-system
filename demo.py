@@ -30,7 +30,7 @@ DEMO_XLSX = os.path.join(DEMO_DIR, "demo_clients.xlsx")
 DEMO_SENTLOG = os.path.join(DEMO_DIR, "demo_sent_log.json")
 
 # >>> The inbox that will receive every demo email (change if you like) <<<
-DEMO_INBOX = "arifdanial@gmail.com"
+DEMO_INBOX = "iamarifdanial@gmail.com"
 
 
 def build_demo_data():
